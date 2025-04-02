@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced BMI Calculator</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self';">
+</head>
+<body>
+
+  <div id="advanced-bmi-calculator">
+    <h3>Advanced BMI Calculator</h3>
+    <label>Height:</label>
+    <input id="height-adv" type="number" />
+    <select id="height-unit-adv">
+      <option value="cm">cm</option>
+      <option value="inches">inches</option>
+    </select>
+    <br />
+    <label>Weight:</label>
+    <input id="weight-adv" type="number" />
+    <select id="weight-unit-adv">
+      <option value="kg">kg</option>
+      <option value="lbs">lbs</option>
+    </select>
+    <br />
+    <label>Waist Circumference:</label>
+    <input id="waist-adv" type="number" />
+    <select id="waist-unit-adv">
+      <option value="cm">cm</option>
+      <option value="inches">inches</option>
+    </select>
+    <br />
+    <label>Activity Level:</label>
+    <select id="activity-adv">
+      <option value="1.2">Sedentary</option>
+      <option value="1.375">Lightly Active</option>
+      <option value="1.55">Moderately Active</option>
+      <option value="1.725">Very Active</option>
+      <option value="1.9">Extra Active</option>
+    </select>
+    <br />
+    <button id="calculate-adv-bmi">Calculate</button>
+    <p id="adv-bmi-result"></p>
+    <p id="adv-bmi-interpretation"></p>
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+</html>
