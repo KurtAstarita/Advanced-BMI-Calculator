@@ -43,4 +43,4 @@ This project is licensed under the MIT License.
 
 ## DISCLAMER
 
-**Read the disclaimer here:** [MACRO Calculator Disclaimer](/DISCLAIMER.md)
+**Read the disclaimer here:** [Advanced BMI Calculator Disclaimer](/DISCLAIMER.md)
