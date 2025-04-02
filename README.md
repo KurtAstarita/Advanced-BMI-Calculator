@@ -28,6 +28,10 @@ This is a web application for calculating Body Mass Index (BMI) with additional 
 * **JavaScript:** For the interactive functionality of the application.
 * **Content Security Policy (CSP):** For enhanced security, using a meta tag to define allowed resources.
 
+## DISCLAMER
+
+**Read the disclaimer here:** [Advanced BMI Calculator Disclaimer](/DISCLAIMER.md)
+
 ## Installation
 
 1.  Clone the repository to your local machine.
@@ -41,6 +45,10 @@ Contributions are welcome! If you find any bugs or have suggestions for improvem
 
 This project is licensed under the MIT License.
 
-## DISCLAMER
+## Author
 
-**Read the disclaimer here:** [Advanced BMI Calculator Disclaimer](/DISCLAIMER.md)
+* Kurt Astarita
+
+## Embed App
+
+* [How To Embed](https://post40gains.blogspot.com/p/ultimate-shopping-log.html)
