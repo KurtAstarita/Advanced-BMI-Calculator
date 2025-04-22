@@ -1,13 +1,17 @@
 document.getElementById("calculate-adv-bmi").addEventListener("click", function() {
     function sanitizeInput(input) {
-        return input.trim();
+        return DOMPurify.sanitize(input);
     }
 
-    var height = parseFloat(sanitizeInput(document.getElementById("height-adv").value));
+    var heightInput = sanitizeInput(document.getElementById("height-adv").value);
+    var weightInput = sanitizeInput(document.getElementById("weight-adv").value);
+    var waistInput = sanitizeInput(document.getElementById("waist-adv").value);
+
+    var height = parseFloat(heightInput);
     var heightUnit = document.getElementById("height-unit-adv").value;
-    var weight = parseFloat(sanitizeInput(document.getElementById("weight-adv").value));
+    var weight = parseFloat(weightInput);
     var weightUnit = document.getElementById("weight-unit-adv").value;
-    var waist = parseFloat(sanitizeInput(document.getElementById("waist-adv").value));
+    var waist = parseFloat(waistInput);
     var waistUnit = document.getElementById("waist-unit-adv").value;
     var activity = parseFloat(document.getElementById("activity-adv").value);
 
