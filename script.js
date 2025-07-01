@@ -45,29 +45,44 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Function to get waist circumference interpretation
     function getWaistInterpretation(waistCm, activityLevel, gender) {
+        // --- NEW DEBUGGING LOGS INSIDE THIS FUNCTION ---
+        console.log("--- Inside getWaistInterpretation ---");
+        console.log("waistCm received:", waistCm);
+        console.log("activityLevel received:", activityLevel);
+        console.log("gender received:", gender);
+        // --- END NEW DEBUGGING LOGS ---
+
         let interpretation = "";
         const waistRiskThresholdMale = 102; // cm (approx 40 inches)
         const waistRiskThresholdFemale = 88; // cm (approx 35 inches)
 
         if (gender === "male") {
+            console.log("Gender is male. Checking waist against male threshold (" + waistRiskThresholdMale + "cm)");
             if (waistCm > waistRiskThresholdMale) {
                 interpretation += "Your waist circumference is high and suggests increased health risks for men. ";
                 if (activityLevel < 1.725) { // Moderately Active (1.55) or below
                     interpretation += "Your current activity level may further increase this risk. ";
                 }
+                console.log("Waist (male) is HIGH. Current interpretation:", interpretation);
             } else {
                 interpretation += "Your waist circumference appears to be within a healthy range for men. ";
+                console.log("Waist (male) is HEALTHY. Current interpretation:", interpretation);
             }
         } else if (gender === "female") {
+            console.log("Gender is female. Checking waist against female threshold (" + waistRiskThresholdFemale + "cm)");
             if (waistCm > waistRiskThresholdFemale) {
                 interpretation += "Your waist circumference is high and suggests increased health risks for women. ";
                 if (activityLevel < 1.725) { // Moderately Active (1.55) or below
                     interpretation += "Your current activity level may further increase this risk. ";
                 }
+                console.log("Waist (female) is HIGH. Current interpretation:", interpretation);
             } else {
                 interpretation += "Your waist circumference appears to be within a healthy range for women. ";
+                console.log("Waist (female) is HEALTHY. Current interpretation:", interpretation);
             }
         }
+        console.log("getWaistInterpretation returning:", interpretation);
+        console.log("--- End getWaistInterpretation ---");
         return interpretation;
     }
 
@@ -131,14 +146,14 @@ document.addEventListener("DOMContentLoaded", function() {
         // 4. Convert all inputs to standard units (cm, kg) for calculations
         const heightCm = convertUnits(height, heightUnit, "cm");
         const weightKg = convertUnits(weight, weightUnit, "kg");
-        const waistCm = convertUnits(waist, waistUnit, "cm");
+        const waistCm = convertUnits(waast, waistUnit, "cm"); // **** POTENTIAL BUG: TYPO 'waast' should be 'waist' ****
         const waistInchesForDisclaimer = convertUnits(waist, waistUnit, "inches"); // Keep inches for disclaimer logic
 
-        // --- DEBUGGING VALUES ---
-        console.log("--- DEBUGGING VALUES ---");
+        // --- GLOBAL DEBUGGING VALUES ---
+        console.log("--- DEBUGGING VALUES (Global Scope) ---");
         console.log("Height (cm):", heightCm);
         console.log("Weight (kg):", weightKg);
-        console.log("Waist (cm):", waistCm);
+        console.log("Waist (cm) AFTER CONVERSION:", waistCm); // Verify this is correct before passing to function
         console.log("Waist Unit (selected):", waistUnit);
         console.log("Activity:", activity);
         console.log("Gender:", gender);
