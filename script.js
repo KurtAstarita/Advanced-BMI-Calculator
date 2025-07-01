@@ -94,3 +94,6 @@ var interpretation = "";
     }
 
     document.getElementById("adv-bmi-interpretation").textContent = interpretation;
+       });
+
+}); // End of DOMContentLoaded listener
