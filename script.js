@@ -41,21 +41,56 @@ document.getElementById("calculate-adv-bmi").addEventListener("click", function(
 
     document.getElementById("adv-bmi-result").textContent = "BMI: " + bmi.toFixed(2);
 
-    var interpretation = "";
+var interpretation = "";
+    var waistInches = waist / 2.54; // Waist is already in CM from conversion earlier
 
-    if (waist > 102 && activity < 1.725) {
-        interpretation += "High waist circumference and low activity suggest increased health risks. ";
-    } else if (waist > 88 && activity < 1.725) {
-        interpretation += "High waist circumference and low activity suggest increased health risks. ";
+    var waistRiskThresholdMale = 102; // cm (approx 40 inches)
+    var waistRiskThresholdFemale = 88; // cm (approx 35 inches)
+
+    // Waist circumference interpretation
+    if (gender === "male") {
+        if (waist > waistRiskThresholdMale) {
+            interpretation += "Your waist circumference is high and suggests increased health risks for men. ";
+            if (activity < 1.725) {
+                interpretation += "Low activity level further increases this risk. ";
+            }
+        } else {
+            interpretation += "Your waist circumference appears to be within a healthy range for men. ";
+        }
+    } else if (gender === "female") {
+        if (waist > waistRiskThresholdFemale) {
+            interpretation += "Your waist circumference is high and suggests increased health risks for women. ";
+            if (activity < 1.725) {
+                interpretation += "Low activity level further increases this risk. ";
+            }
+        } else {
+            interpretation += "Your waist circumference appears to be within a healthy range for women. ";
+        }
     }
 
-    if (bmi >= 25) {
-        interpretation += "BMI indicates potential overweight or obesity. ";
+    // BMI interpretation (same as before)
+    if (bmi < 18.5) {
+        interpretation += "Your BMI indicates you are underweight. ";
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+        // If the waist part already said 'healthy range', avoid redundancy
+        if (!interpretation.includes("healthy range for")) { // Check for either "healthy range for men" or "healthy range for women"
+             interpretation += "Your BMI is within a healthy weight range. ";
+        }
+    } else if (bmi >= 25 && bmi < 29.9) {
+        interpretation += "Your BMI indicates you are overweight. ";
+    } else { // bmi >= 30
+        interpretation += "Your BMI indicates you are obese. ";
     }
 
+    // Add a disclaimer about BMI for muscular individuals
+    // This is still important regardless of gender, but threshold might be slightly adjusted for context.
+    if (bmi >= 25 && waistInches < 38 && activity >= 1.55) { // Using waistInches for general context here
+        interpretation += "Note: BMI may overestimate body fat in athletes and very muscular individuals. Consult a healthcare professional for a more accurate assessment. ";
+    }
+    
+    // Final fallback
     if (interpretation === "") {
-        interpretation = "BMI and waist circumference suggest a healthy range. ";
+        interpretation = "Please re-check your inputs or consult a professional for interpretation.";
     }
 
     document.getElementById("adv-bmi-interpretation").textContent = interpretation;
-});
