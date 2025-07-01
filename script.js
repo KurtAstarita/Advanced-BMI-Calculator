@@ -1,99 +1,109 @@
-document.getElementById("calculate-adv-bmi").addEventListener("click", function() {
-    function sanitizeInput(input) {
-        return DOMPurify.sanitize(input);
-    }
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("calculate-adv-bmi").addEventListener("click", function() {
 
-    var heightInput = sanitizeInput(document.getElementById("height-adv").value);
-    var weightInput = sanitizeInput(document.getElementById("weight-adv").value);
-    var waistInput = sanitizeInput(document.getElementById("waist-adv").value);
-
-    var height = parseFloat(heightInput);
-    var heightUnit = document.getElementById("height-unit-adv").value;
-    var weight = parseFloat(weightInput);
-    var weightUnit = document.getElementById("weight-unit-adv").value;
-    var waist = parseFloat(waistInput);
-    var waistUnit = document.getElementById("waist-unit-adv").value;
-    var activity = parseFloat(document.getElementById("activity-adv").value);
-
-    if (isNaN(height) || isNaN(weight) || isNaN(waist) || isNaN(activity)) {
-        document.getElementById("adv-bmi-result").textContent = "Please enter valid numbers.";
-        document.getElementById("adv-bmi-interpretation").textContent = "";
-        return;
-    }
-
-    if (height <= 0 || weight <= 0 || waist <= 0 || activity <= 0) {
-        document.getElementById("adv-bmi-result").textContent = "Height, weight, waist, and activity must be greater than zero.";
-        document.getElementById("adv-bmi-interpretation").textContent = "";
-        return;
-    }
-
-    if (heightUnit === "inches") {
-        height = height * 2.54;
-    }
-    if (weightUnit === "lbs") {
-        weight = weight / 2.205;
-    }
-    if (waistUnit === "inches") {
-        waist = waist * 2.54;
-    }
-
-    var bmi = weight / ((height / 100) * (height / 100));
-
-    document.getElementById("adv-bmi-result").textContent = "BMI: " + bmi.toFixed(2);
-
-var interpretation = "";
-    var waistInches = waist / 2.54; // Waist is already in CM from conversion earlier
-
-    var waistRiskThresholdMale = 102; // cm (approx 40 inches)
-    var waistRiskThresholdFemale = 88; // cm (approx 35 inches)
-
-    // Waist circumference interpretation
-    if (gender === "male") {
-        if (waist > waistRiskThresholdMale) {
-            interpretation += "Your waist circumference is high and suggests increased health risks for men. ";
-            if (activity < 1.725) {
-                interpretation += "Low activity level further increases this risk. ";
+        function sanitizeInput(input) {
+            if (typeof DOMPurify !== 'undefined') {
+                return DOMPurify.sanitize(input);
             }
-        } else {
-            interpretation += "Your waist circumference appears to be within a healthy range for men. ";
+            console.warn("DOMPurify not loaded, input not sanitized.");
+            return input;
         }
-    } else if (gender === "female") {
-        if (waist > waistRiskThresholdFemale) {
-            interpretation += "Your waist circumference is high and suggests increased health risks for women. ";
-            if (activity < 1.725) {
-                interpretation += "Low activity level further increases this risk. ";
+
+        var heightInput = sanitizeInput(document.getElementById("height-adv").value);
+        var weightInput = sanitizeInput(document.getElementById("weight-adv").value);
+        var waistInput = sanitizeInput(document.getElementById("waist-adv").value);
+
+        var height = parseFloat(heightInput);
+        var heightUnit = document.getElementById("height-unit-adv").value;
+        var weight = parseFloat(weightInput);
+        var weightUnit = document.getElementById("weight-unit-adv").value;
+        var waist = parseFloat(waistInput);
+        var waistUnit = document.getElementById("waist-unit-adv").value;
+        var activity = parseFloat(document.getElementById("activity-adv").value);
+        var gender = document.getElementById("gender-adv").value; // <-- THIS LINE WAS MISSING IN YOUR LAST PASTE
+
+        // --- Input Validation ---
+        if (isNaN(height) || isNaN(weight) || isNaN(waist) || isNaN(activity)) {
+            document.getElementById("adv-bmi-result").textContent = "Please enter valid numbers.";
+            document.getElementById("adv-bmi-interpretation").textContent = "";
+            return;
+        }
+
+        if (height <= 0 || weight <= 0 || waist <= 0 || activity <= 0) {
+            document.getElementById("adv-bmi-result").textContent = "Height, weight, waist, and activity must be greater than zero.";
+            document.getElementById("adv-bmi-interpretation").textContent = "";
+            return;
+        }
+
+        // --- Unit Conversions to CM and KG ---
+        if (heightUnit === "inches") {
+            height = height * 2.54; // Convert inches to cm
+        }
+        if (weightUnit === "lbs") {
+            weight = weight / 2.205; // Convert lbs to kg
+        }
+        if (waistUnit === "inches") {
+            waist = waist * 2.54; // Convert inches to cm
+        }
+
+        // --- BMI Calculation ---
+        var bmi = weight / ((height / 100) * (height / 100)); // Height is in cm, convert to meters for BMI
+
+        document.getElementById("adv-bmi-result").textContent = "BMI: " + bmi.toFixed(2);
+
+        // --- Interpretation Logic ---
+        var interpretation = "";
+        var waistInches = waist / 2.54; // Convert waist back to inches for display context in interpretation
+
+        var waistRiskThresholdMale = 102; // cm (approx 40 inches)
+        var waistRiskThresholdFemale = 88; // cm (approx 35 inches)
+
+        // Waist circumference interpretation
+        if (gender === "male") {
+            if (waist > waistRiskThresholdMale) {
+                interpretation += "Your waist circumference is high and suggests increased health risks for men. ";
+                if (activity < 1.725) { // Moderately Active (1.55) or below
+                    interpretation += "Your current activity level may further increase this risk. ";
+                }
+            } else {
+                interpretation += "Your waist circumference appears to be within a healthy range for men. ";
             }
-        } else {
-            interpretation += "Your waist circumference appears to be within a healthy range for women. ";
+        } else if (gender === "female") {
+            if (waist > waistRiskThresholdFemale) {
+                interpretation += "Your waist circumference is high and suggests increased health risks for women. ";
+                if (activity < 1.725) { // Moderately Active (1.55) or below
+                    interpretation += "Your current activity level may further increase this risk. ";
+                }
+            } else {
+                interpretation += "Your waist circumference appears to be within a healthy range for women. ";
+            }
         }
-    }
 
-    // BMI interpretation (same as before)
-    if (bmi < 18.5) {
-        interpretation += "Your BMI indicates you are underweight. ";
-    } else if (bmi >= 18.5 && bmi < 24.9) {
-        // If the waist part already said 'healthy range', avoid redundancy
-        if (!interpretation.includes("healthy range for")) { // Check for either "healthy range for men" or "healthy range for women"
-             interpretation += "Your BMI is within a healthy weight range. ";
+        // BMI interpretation
+        if (bmi < 18.5) {
+            interpretation += "Your BMI indicates you are underweight. ";
+        } else if (bmi >= 18.5 && bmi < 24.9) {
+            // Only add if waist part didn't already give a healthy range message to avoid redundancy
+            if (!interpretation.includes("healthy range for")) {
+                interpretation += "Your BMI is within a healthy weight range. ";
+            }
+        } else if (bmi >= 25 && bmi < 29.9) {
+            interpretation += "Your BMI indicates you are overweight. ";
+        } else { // bmi >= 30
+            interpretation += "Your BMI indicates you are obese. ";
         }
-    } else if (bmi >= 25 && bmi < 29.9) {
-        interpretation += "Your BMI indicates you are overweight. ";
-    } else { // bmi >= 30
-        interpretation += "Your BMI indicates you are obese. ";
-    }
 
-    // Add a disclaimer about BMI for muscular individuals
-    // This is still important regardless of gender, but threshold might be slightly adjusted for context.
-    if (bmi >= 25 && waistInches < 38 && activity >= 1.55) { // Using waistInches for general context here
-        interpretation += "Note: BMI may overestimate body fat in athletes and very muscular individuals. Consult a healthcare professional for a more accurate assessment. ";
-    }
-    
-    // Final fallback
-    if (interpretation === "") {
-        interpretation = "Please re-check your inputs or consult a professional for interpretation.";
-    }
+        // Add a disclaimer about BMI for muscular individuals, considering both BMI and a healthy waist
+        // Adjusted the waistInches threshold for the disclaimer to be more generally applicable for a "jacked" person
+        if (bmi >= 25 && waistInches <= 35 && activity >= 1.55) { // High BMI but healthy waist and active
+            interpretation += "Note: BMI may overestimate body fat in athletes and very muscular individuals. Consult a healthcare professional for a more accurate body composition assessment. ";
+        }
 
-    document.getElementById("adv-bmi-interpretation").textContent = interpretation;
-       });
+        // Final fallback if no specific interpretation was generated
+        if (interpretation === "") {
+            interpretation = "Could not generate a full interpretation. Please ensure all fields are correctly filled.";
+        }
 
-}); // End of DOMContentLoaded listener
+        document.getElementById("adv-bmi-interpretation").textContent = interpretation;
+    });
+});
