@@ -27,10 +27,8 @@ document.getElementById('calculate-adv-bmi').addEventListener('click', function 
     // Waist-to-height ratio
     const whtr = waistCm / heightCm;
 
-    // Adjusted BMI factoring in WHtR
-    let adjustedBMI = bmi;
-    if (whtr > 0.5) adjustedBMI += 1.5;
-    if (whtr < 0.4) adjustedBMI -= 1.0;
+    // Adjusted BMI factoring in WHtR with gradual scaling
+    let adjustedBMI = bmi + ((whtr - 0.5) * 10); // +1.0 BMI per 0.1 over 0.5, -1.0 if under
 
     let interpretation = '';
     if (adjustedBMI < 18.5) {
@@ -44,7 +42,7 @@ document.getElementById('calculate-adv-bmi').addEventListener('click', function 
     }
 
     displayResult(
-        `Adjusted BMI: ${adjustedBMI.toFixed(1)} (includes waist-to-height ratio)`,
+        `Adjusted BMI: ${adjustedBMI.toFixed(1)} (WHtR: ${whtr.toFixed(2)})`,
         `Interpretation: ${interpretation}`
     );
 });
