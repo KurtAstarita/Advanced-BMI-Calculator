@@ -32,8 +32,7 @@ document.getElementById('calculate-adv-bmi').addEventListener('click', function 
     let adjustedBMI = bmi + whtrAdjustment;
 
     if (!isNaN(bodyFat) && bodyFat > 0 && bodyFat < 70) {
-        // adjust further if body fat % is provided (optional fine-tune)
-        const bfAdjustment = (bodyFat - 18) / 10; // >18% increases adjustedBMI
+        const bfAdjustment = (bodyFat - 18) / 10;
         adjustedBMI += bfAdjustment;
     }
 
@@ -51,6 +50,10 @@ document.getElementById('calculate-adv-bmi').addEventListener('click', function 
     let advisory = '';
     if (adjustedBMI >= 25 && whtr < 0.52 && (isNaN(bodyFat) || bodyFat < 18)) {
         advisory = 'Note: Your BMI is high, but your waist-to-height ratio and/or body fat percentage suggest you may have high muscle mass rather than excess fat.';
+    }
+
+    if (adjustedBMI >= 25 && activity >= 1.55 && (whtr < 0.52 || (!isNaN(bodyFat) && bodyFat < 18))) {
+        advisory += (advisory ? ' ' : '') + 'Your high activity level may also indicate greater lean mass.';
     }
 
     let resultText = `Raw BMI: ${bmi.toFixed(1)}, Adjusted BMI: ${adjustedBMI.toFixed(1)} (WHtR: ${whtr.toFixed(2)})`;
