@@ -9,26 +9,33 @@ document.getElementById('calculate-adv-bmi').addEventListener('click', function 
     const waistUnit = document.getElementById('waist-unit-adv').value;
     const activity = parseFloat(document.getElementById('activity-adv').value);
     const gender = document.getElementById('gender-adv').value;
+    const bodyFatInput = document.getElementById('bodyfat-adv');
+    const bodyFat = bodyFatInput ? parseFloat(bodyFatInput.value) : null;
 
     if (isNaN(height) || isNaN(weight) || isNaN(waist)) {
         displayResult('Please enter valid numbers for height, weight, and waist.', '');
         return;
     }
 
-    // Unit conversions
     const heightCm = heightUnit === 'inches' ? height * 2.54 : height;
     const weightKg = weightUnit === 'lbs' ? weight * 0.453592 : weight;
     const waistCm = waistUnit === 'inches' ? waist * 2.54 : waist;
 
-    // BMI calculation
     const heightM = heightCm / 100;
     const bmi = weightKg / (heightM * heightM);
 
-    // Waist-to-height ratio
     const whtr = waistCm / heightCm;
 
-    // Adjusted BMI factoring in WHtR with gradual scaling
-    let adjustedBMI = bmi + ((whtr - 0.5) * 10); // +1.0 BMI per 0.1 over 0.5, -1.0 if under
+    let whtrAdjustment = (whtr - 0.5) * 10;
+    whtrAdjustment = Math.max(Math.min(whtrAdjustment, 3), -2);
+
+    let adjustedBMI = bmi + whtrAdjustment;
+
+    if (!isNaN(bodyFat) && bodyFat > 0 && bodyFat < 70) {
+        // adjust further if body fat % is provided (optional fine-tune)
+        const bfAdjustment = (bodyFat - 18) / 10; // >18% increases adjustedBMI
+        adjustedBMI += bfAdjustment;
+    }
 
     let interpretation = '';
     if (adjustedBMI < 18.5) {
@@ -41,9 +48,19 @@ document.getElementById('calculate-adv-bmi').addEventListener('click', function 
         interpretation = 'Obese';
     }
 
+    let advisory = '';
+    if (adjustedBMI >= 25 && whtr < 0.52 && (isNaN(bodyFat) || bodyFat < 18)) {
+        advisory = 'Note: Your BMI is high, but your waist-to-height ratio and/or body fat percentage suggest you may have high muscle mass rather than excess fat.';
+    }
+
+    let resultText = `Raw BMI: ${bmi.toFixed(1)}, Adjusted BMI: ${adjustedBMI.toFixed(1)} (WHtR: ${whtr.toFixed(2)})`;
+    if (!isNaN(bodyFat)) {
+        resultText += `, Body Fat %: ${bodyFat.toFixed(1)}`;
+    }
+
     displayResult(
-        `Adjusted BMI: ${adjustedBMI.toFixed(1)} (WHtR: ${whtr.toFixed(2)})`,
-        `Interpretation: ${interpretation}`
+        resultText,
+        `Interpretation: ${interpretation}${advisory ? ' \n' + advisory : ''}`
     );
 });
 
