@@ -46,6 +46,17 @@ document.addEventListener("DOMContentLoaded", function() {
             waist = waist * 2.54; // Convert inches to cm
         }
 
+        
+        // --- ADD THESE CONSOLE.LOGS ---
+console.log("--- DEBUGGING VALUES ---");
+console.log("Height (cm):", height);
+console.log("Weight (kg):", weight);
+console.log("Waist (cm):", waist);
+console.log("Waist Unit (selected):", waistUnit);
+console.log("Activity:", activity);
+console.log("Gender:", gender);
+console.log("------------------------");
+
         // --- BMI Calculation ---
         var bmi = weight / ((height / 100) * (height / 100)); // Height is in cm, convert to meters for BMI
 
