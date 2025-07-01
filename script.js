@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
         var waist = parseFloat(waistInput);
         var waistUnit = document.getElementById("waist-unit-adv").value;
         var activity = parseFloat(document.getElementById("activity-adv").value);
-        var gender = document.getElementById("gender-adv").value; // <-- THIS LINE WAS MISSING IN YOUR LAST PASTE
+        var gender = document.getElementById("gender-adv").value;
 
         // --- Input Validation ---
         if (isNaN(height) || isNaN(weight) || isNaN(waist) || isNaN(activity)) {
@@ -46,16 +46,15 @@ document.addEventListener("DOMContentLoaded", function() {
             waist = waist * 2.54; // Convert inches to cm
         }
 
-        
         // --- ADD THESE CONSOLE.LOGS ---
-console.log("--- DEBUGGING VALUES ---");
-console.log("Height (cm):", height);
-console.log("Weight (kg):", weight);
-console.log("Waist (cm):", waist);
-console.log("Waist Unit (selected):", waistUnit);
-console.log("Activity:", activity);
-console.log("Gender:", gender);
-console.log("------------------------");
+        console.log("--- DEBUGGING VALUES ---");
+        console.log("Height (cm):", height);
+        console.log("Weight (kg):", weight);
+        console.log("Waist (cm):", waist);
+        console.log("Waist Unit (selected):", waistUnit);
+        console.log("Activity:", activity);
+        console.log("Gender:", gender);
+        console.log("------------------------");
 
         // --- BMI Calculation ---
         var bmi = weight / ((height / 100) * (height / 100)); // Height is in cm, convert to meters for BMI
@@ -90,14 +89,11 @@ console.log("------------------------");
             }
         }
 
-        // BMI interpretation
+        // BMI interpretation (THIS IS THE MODIFIED SECTION)
         if (bmi < 18.5) {
             interpretation += "Your BMI indicates you are underweight. ";
         } else if (bmi >= 18.5 && bmi < 24.9) {
-            // Only add if waist part didn't already give a healthy range message to avoid redundancy
-            if (!interpretation.includes("healthy range for")) {
-                interpretation += "Your BMI is within a healthy weight range. ";
-            }
+            interpretation += "Your BMI is within a healthy weight range. "; // Always add this if true
         } else if (bmi >= 25 && bmi < 29.9) {
             interpretation += "Your BMI indicates you are overweight. ";
         } else { // bmi >= 30
@@ -110,7 +106,7 @@ console.log("------------------------");
             interpretation += "Note: BMI may overestimate body fat in athletes and very muscular individuals. Consult a healthcare professional for a more accurate body composition assessment. ";
         }
 
-        // Final fallback if no specific interpretation was generated
+        // Final fallback if no specific interpretation was generated (though with the changes, this should be rare)
         if (interpretation === "") {
             interpretation = "Could not generate a full interpretation. Please ensure all fields are correctly filled.";
         }
